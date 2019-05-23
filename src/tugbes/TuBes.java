@@ -51,7 +51,7 @@ public class TuBes extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextField4 = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new tugbes.image();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -72,7 +72,6 @@ public class TuBes extends javax.swing.JFrame {
         jTextField8 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
 
         jTextField4.setText("jTextField4");
 
@@ -181,10 +180,6 @@ public class TuBes extends javax.swing.JFrame {
         jPanel1.add(jButton2);
         jButton2.setBounds(680, 200, 71, 23);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/Images.PNG"))); // NOI18N
-        jPanel1.add(jLabel1);
-        jLabel1.setBounds(0, 0, 790, 540);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -261,7 +256,6 @@ public class TuBes extends javax.swing.JFrame {
     private javax.swing.JTextField harga;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
