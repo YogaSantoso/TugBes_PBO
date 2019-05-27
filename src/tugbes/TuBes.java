@@ -1,8 +1,13 @@
 package tugbes;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,30 +19,57 @@ public class TuBes extends javax.swing.JFrame {
     String url;
     File file;
     BufferedReader br;
-    DefaultTableModel model;
+    String path;
+    BufferedWriter bw;
+    DefaultTableModel model1;//untuk jTable1
+    DefaultTableModel model2;//untuk jTable2
+    int d = 0, total = 0, kembali = 0;
 
     public TuBes() {
         initComponents();
+        model1 = (DefaultTableModel)jTable1.getModel();
+        model2 = (DefaultTableModel)jTable2.getModel();
         loadData();
-       
+        totalfield.setEnabled(false);
+        kembalian.setEnabled(false);
+        paket.setEnabled(false);
+        jenispaket.setEnabled(false);
+        harga.setEnabled(false);
     }
     public void loadData() {
         url = "src/tugbes/Laundry.txt";
         file = new File (url);
         try {
             br = new BufferedReader(new FileReader(file));
-            String barisPertama = br.readLine();
-            String[] namaKolom = barisPertama.split(",");
-            model = (DefaultTableModel) jTable1.getModel();
-            model.setColumnIdentifiers(namaKolom);
+//            String barisPertama = br.readLine();
+//            String[] namaKolom = barisPertama.split(",");
+//            model1 = (DefaultTableModel) jTable1.getModel();
+//            model1.setColumnIdentifiers(namaKolom);
             
             Object[]dataBaris = br.lines().toArray();
             for(int i = 0; i<dataBaris.length;i++){
                 String baris = dataBaris[i].toString();
                 String[] data = baris.split("/");
-                model.addRow(data);
+                model1.addRow(data);
             }
         } catch (Exception e) {
+        }
+    }
+    public void Update(){
+        path = "src/tugbes/Laundry.txt";
+        file = new File(path);
+        try {
+            bw = new BufferedWriter(new FileWriter(file));
+            for(int i=0;i<jTable1.getRowCount();i++){
+                for(int j=0;j<jTable1.getColumnCount();j++){
+                    if(j>0)
+                        bw.write("/");
+                    bw.write(jTable1.getValueAt(i, j).toString());
+                }
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
         }
     }
 
@@ -67,9 +99,9 @@ public class TuBes extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
+        totalfield = new javax.swing.JTextField();
+        cash = new javax.swing.JTextField();
+        kembalian = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -84,9 +116,17 @@ public class TuBes extends javax.swing.JFrame {
 
             },
             new String [] {
-
+                "PAKET", "JENIS PAKET", "HARGA", "SATUAN"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -99,37 +139,52 @@ public class TuBes extends javax.swing.JFrame {
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Paket", "Jenis Paket", "Kg", "Harga", "Total Harga"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
 
         jPanel1.add(jScrollPane2);
         jScrollPane2.setBounds(10, 250, 390, 270);
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Paket");
         jPanel1.add(jLabel2);
         jLabel2.setBounds(490, 30, 50, 30);
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Jenis Paket");
         jPanel1.add(jLabel3);
         jLabel3.setBounds(490, 70, 70, 20);
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Kg");
         jPanel1.add(jLabel4);
         jLabel4.setBounds(490, 110, 20, 20);
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("Harga");
         jPanel1.add(jLabel5);
         jLabel5.setBounds(490, 150, 40, 20);
         jPanel1.add(paket);
         paket.setBounds(590, 30, 140, 30);
+
+        jenispaket.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jenispaketActionPerformed(evt);
+            }
+        });
         jPanel1.add(jenispaket);
         jenispaket.setBounds(590, 70, 140, 30);
 
@@ -149,36 +204,44 @@ public class TuBes extends javax.swing.JFrame {
         jPanel1.add(harga);
         harga.setBounds(590, 150, 140, 30);
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("Total Bayar");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(480, 300, 55, 14);
+        jLabel6.setBounds(480, 300, 80, 15);
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Cash");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(480, 350, 60, 14);
+        jLabel7.setBounds(480, 350, 60, 15);
 
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Kembalian");
         jPanel1.add(jLabel8);
-        jLabel8.setBounds(480, 400, 60, 14);
-        jPanel1.add(jTextField6);
-        jTextField6.setBounds(610, 300, 110, 30);
-        jPanel1.add(jTextField7);
-        jTextField7.setBounds(610, 340, 110, 30);
-        jPanel1.add(jTextField8);
-        jTextField8.setBounds(610, 380, 110, 30);
+        jLabel8.setBounds(480, 400, 70, 15);
+        jPanel1.add(totalfield);
+        totalfield.setBounds(610, 300, 110, 30);
+        jPanel1.add(cash);
+        cash.setBounds(610, 340, 110, 30);
+        jPanel1.add(kembalian);
+        kembalian.setBounds(610, 380, 110, 30);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("BAYAR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1);
-        jButton1.setBounds(680, 470, 73, 23);
+        jButton1.setBounds(680, 443, 80, 30);
 
-        jButton2.setText("Tambah");
+        jButton2.setText("PESAN");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(680, 200, 71, 23);
+        jButton2.setBounds(680, 200, 80, 30);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -213,9 +276,101 @@ public class TuBes extends javax.swing.JFrame {
     }//GEN-LAST:event_kgKeyTyped
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+//         TODO add your handling code here:
+         String [] data2 = new String [5];
+        String pkt = paket.getText();
+        String jpkt = jenispaket.getText();
+        String hrg = harga.getText();
+        int hargaaa = Integer.parseInt(harga.getText());
+        int jumlah = Integer.parseInt(kg.getText());
+        
+        int h = 0,  baris = 0;
+        String nama = "";
+        boolean ada = false;
+        if(pkt.equals("") || jumlah == 0 ){
+            
+        }
+        else{
+            for(int i = 0; i<model1.getRowCount();i++){
+                if(pkt.equals(model1.getValueAt(i, 0))){
+                    nama = model1.getValueAt(i, 1).toString();
+                    hrg = model1.getValueAt(i, 2).toString();
+                    
+                    
+                    
+                    
+                    baris = i;
+                    ada = true;
+                    paket.setText("");  
+                    jenispaket.setText("");
+                    kg.setText("");
+                    harga.setText("");
+                            
+                }
+            }
+            
+                Update();
+                loadData();
+                data2 [0] = pkt;
+                data2 [1] = jpkt;
+                data2 [2] = ""+jumlah;
+                data2 [3] = hrg;
+                data2 [4] = ""+(hargaaa*jumlah);
+                
+                model2.addRow(data2);
+           
+           
+        }
+        total += (hargaaa*jumlah);
+        totalfield.setText("Rp. "+total);
+
+          //  DefaultTableModel model = (DefaultTableModel)jTable2.getModel ();
+            //model.addRow(new Object []{paket.getText(),jenispaket.getText(),kg.getText(),harga.getText()});
+//        int a = Integer.parseInt(kg.getText());
+//        int b = Integer.parseInt(harga.getText());
+//        int c = a*b;
+//
+//        DefaultTableModel tb = (DefaultTableModel)jTable2 .getModel ();
+//        Vector z = new Vector ();
+//        z.add(paket.getText());
+//        z.add(jenispaket.getText());
+//        z.add(harga.getText());
+//        z.add(kg.getText());
+//        z.add(c)
+//        tb.addRow(z);
+//    
+//        int total = (harga*kg);
+//        totalfield.setText("Rp. "+total);
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jenispaketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jenispaketActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jenispaketActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+          if(cash.getText().isEmpty()){
+            
+            
+        }
+        else{
+            int uang = Integer.parseInt(cash.getText().toString());
+            kembali = uang - total;
+            if(total != 0){
+                if(uang >= total){
+                    kembalian.setText("Rp. "+ kembali);
+                }
+                else{
+                   // kembaliField.setText("Uang Kurang");
+                   JOptionPane.showMessageDialog(null,"Uang Kurang","Perhatian",HEIGHT);
+                }
+            }
+            else{
+                kembalian.setText("Rp. "+ uang);
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -253,6 +408,7 @@ public class TuBes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField cash;
     private javax.swing.JTextField harga;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -269,11 +425,10 @@ public class TuBes extends javax.swing.JFrame {
     public javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jenispaket;
+    private javax.swing.JTextField kembalian;
     private javax.swing.JTextField kg;
     private javax.swing.JTextField paket;
+    private javax.swing.JTextField totalfield;
     // End of variables declaration//GEN-END:variables
 }
