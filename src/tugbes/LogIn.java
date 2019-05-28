@@ -122,7 +122,7 @@ public class LogIn extends javax.swing.JFrame {
             pass = Integer.parseInt(Pass.getText().toString());
             if (pass==pin){
                 this.setVisible(false);
-                new TuBes().setVisible(true);
+                new menu().setVisible(true);
             }
             else if (pass!=pin){
                 JOptionPane.showMessageDialog(null, "Masuukan");
