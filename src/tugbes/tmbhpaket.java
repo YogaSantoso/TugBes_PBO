@@ -13,38 +13,17 @@ import javax.swing.table.DefaultTableModel;
  */
 public class tmbhpaket extends javax.swing.JFrame {
     String[] data;
-    String url;
-    File file;
-    BufferedReader br;
     DefaultTableModel model;
     DefaultTableModel model1;
+    loadData l = new loadData ();
     
     public tmbhpaket() {
         initComponents();
         model1 = (DefaultTableModel)jTable1.getModel();
-        loadData();
+        l.loadData(jTable1);
         data = new String[4];
     }
     
-    public void loadData (){
-       url = "src/tugbes/Laundry.txt";
-        file = new File (url);
-        try {
-            br = new BufferedReader(new FileReader(file));
-//            String barisPertama = br.readLine();
-//            String[] namaKolom = barisPertama.split(",");
-//            model1 = (DefaultTableModel) jTable1.getModel();
-//            model1.setColumnIdentifiers(namaKolom);
-            
-            Object[]dataBaris = br.lines().toArray();
-            for(int i = 0; i<dataBaris.length;i++){
-                String baris = dataBaris[i].toString();
-                String[] data = baris.split("/");
-                model1.addRow(data);
-            }
-        } catch (Exception e) {
-        }
-    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -61,9 +40,9 @@ public class tmbhpaket extends javax.swing.JFrame {
         jenispaket = new javax.swing.JTextField();
         harga = new javax.swing.JTextField();
         kg = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        tambah = new javax.swing.JButton();
+        hapus = new javax.swing.JButton();
+        edit = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -100,24 +79,34 @@ public class tmbhpaket extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Tambah");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        tambah.setText("Tambah");
+        tambah.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tambahMouseClicked(evt);
+            }
+        });
+        tambah.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                tambahActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Hapus");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        hapus.setText("Hapus");
+        hapus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hapusMouseClicked(evt);
+            }
+        });
+        hapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                hapusActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Edit");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        edit.setText("Edit");
+        edit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                editActionPerformed(evt);
             }
         });
 
@@ -142,9 +131,9 @@ public class tmbhpaket extends javax.swing.JFrame {
                 .addGap(51, 51, 51)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(tambah)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
+                        .addComponent(hapus))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(paket, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                         .addComponent(jenispaket)
@@ -157,7 +146,7 @@ public class tmbhpaket extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(edit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4)
                         .addGap(21, 21, 21))))
@@ -183,9 +172,9 @@ public class tmbhpaket extends javax.swing.JFrame {
                     .addComponent(kg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
+                    .addComponent(tambah)
+                    .addComponent(hapus)
+                    .addComponent(edit)
                     .addComponent(jButton4))
                 .addGap(38, 38, 38))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -212,7 +201,7 @@ public class tmbhpaket extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jenispaketActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahActionPerformed
         // TODO add your handling code here:
         data[0] = paket.getText();
         data[1] = jenispaket.getText();
@@ -223,11 +212,11 @@ public class tmbhpaket extends javax.swing.JFrame {
         jenispaket.setText("");
         harga.setText("");
         kg.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_tambahActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
         // TODO add your handling code here:
-         int baris = jTable1.getSelectedRow();
+        int baris = jTable1.getSelectedRow();
         data[0] = paket.getText();
         data[1] = jenispaket.getText();
         data[2] = harga.getText();
@@ -242,9 +231,9 @@ public class tmbhpaket extends javax.swing.JFrame {
         jenispaket.setText("");
         harga.setText("");
         kg.setText("");
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_editActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
         try {
@@ -257,7 +246,7 @@ public class tmbhpaket extends javax.swing.JFrame {
         jenispaket.setText("");
         harga.setText("");
         kg.setText("");
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_hapusActionPerformed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here
@@ -268,6 +257,23 @@ public class tmbhpaket extends javax.swing.JFrame {
         rgf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.dispose();
     }//GEN-LAST:event_jButton4MouseClicked
+
+    private void tambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tambahMouseClicked
+        // TODO add your handling code here:
+        int baris = jTable1.getSelectedRow();
+        paket.setText(jTable1.getValueAt(baris, 0).toString());
+        jenispaket.setText(jTable1.getValueAt(baris, 1).toString());
+        harga.setText(jTable1.getValueAt(baris, 2).toString());
+        kg.setText(jTable1.getValueAt(baris, 3).toString());
+    }//GEN-LAST:event_tambahMouseClicked
+
+    private void hapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hapusMouseClicked
+        // TODO add your handling code here:
+        paket.setText("");
+        jenispaket.setText("");
+        harga.setText("");
+        kg.setText("");
+    }//GEN-LAST:event_hapusMouseClicked
 
     /**
      * @param args the command line arguments
@@ -308,10 +314,9 @@ public class tmbhpaket extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton edit;
+    private javax.swing.JButton hapus;
     private javax.swing.JTextField harga;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -323,5 +328,6 @@ public class tmbhpaket extends javax.swing.JFrame {
     private javax.swing.JTextField jenispaket;
     private javax.swing.JTextField kg;
     private javax.swing.JTextField paket;
+    private javax.swing.JButton tambah;
     // End of variables declaration//GEN-END:variables
 }

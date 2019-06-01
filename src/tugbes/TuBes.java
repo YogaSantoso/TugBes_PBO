@@ -17,61 +17,22 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TuBes extends javax.swing.JFrame {
     String[] data;
-    String url;
-    File file;
-    BufferedReader br;
-    String path;
-    BufferedWriter bw;
     DefaultTableModel model1;//untuk jTable1
     DefaultTableModel model2;//untuk jTable2
     int d = 0, total = 0, kembali = 0;
-
+    loadData l = new loadData ();
+    Update u = new Update ();
+    
     public TuBes() {
         initComponents();
         model1 = (DefaultTableModel)jTable1.getModel();
         model2 = (DefaultTableModel)jTable2.getModel();
-        loadData();
+        l.loadData(jTable1);
         totalfield.setEnabled(false);
         kembalian.setEnabled(false);
         paket.setEnabled(false);
         jenispaket.setEnabled(false);
         harga.setEnabled(false);
-    }
-    public void loadData() {
-        url = "src/tugbes/Laundry.txt";
-        file = new File (url);
-        try {
-            br = new BufferedReader(new FileReader(file));
-//            String barisPertama = br.readLine();
-//            String[] namaKolom = barisPertama.split(",");
-//            model1 = (DefaultTableModel) jTable1.getModel();
-//            model1.setColumnIdentifiers(namaKolom);
-            
-            Object[]dataBaris = br.lines().toArray();
-            for(int i = 0; i<dataBaris.length;i++){
-                String baris = dataBaris[i].toString();
-                String[] data = baris.split("/");
-                model1.addRow(data);
-            }
-        } catch (Exception e) {
-        }
-    }
-    public void Update(){
-        path = "src/tugbes/Laundry.txt";
-        file = new File(path);
-        try {
-            bw = new BufferedWriter(new FileWriter(file));
-            for(int i=0;i<jTable1.getRowCount();i++){
-                for(int j=0;j<jTable1.getColumnCount();j++){
-                    if(j>0)
-                        bw.write("/");
-                    bw.write(jTable1.getValueAt(i, j).toString());
-                }
-                bw.newLine();
-            }
-            bw.close();
-        } catch (IOException e) {
-        }
     }
 
     /**
@@ -84,6 +45,7 @@ public class TuBes extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextField4 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new tugbes.image();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -106,8 +68,12 @@ public class TuBes extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
 
         jTextField4.setText("jTextField4");
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -137,7 +103,7 @@ public class TuBes extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 10, 390, 190);
+        jScrollPane1.setBounds(10, 60, 390, 230);
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,29 +124,29 @@ public class TuBes extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable2);
 
         jPanel1.add(jScrollPane2);
-        jScrollPane2.setBounds(10, 250, 390, 270);
+        jScrollPane2.setBounds(10, 300, 390, 220);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Paket");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(490, 30, 50, 30);
+        jLabel2.setBounds(450, 70, 50, 30);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Jenis Paket");
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(490, 70, 70, 20);
+        jLabel3.setBounds(450, 130, 70, 20);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Kg");
         jPanel1.add(jLabel4);
-        jLabel4.setBounds(490, 110, 20, 20);
+        jLabel4.setBounds(450, 180, 20, 20);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel5.setText("Harga");
         jPanel1.add(jLabel5);
-        jLabel5.setBounds(490, 150, 40, 20);
+        jLabel5.setBounds(450, 230, 40, 20);
         jPanel1.add(paket);
-        paket.setBounds(590, 30, 140, 30);
+        paket.setBounds(570, 70, 150, 30);
 
         jenispaket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,7 +154,7 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jenispaket);
-        jenispaket.setBounds(590, 70, 140, 30);
+        jenispaket.setBounds(570, 120, 150, 30);
 
         kg.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -196,7 +162,7 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(kg);
-        kg.setBounds(590, 110, 140, 30);
+        kg.setBounds(570, 170, 150, 30);
 
         harga.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,29 +170,31 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(harga);
-        harga.setBounds(590, 150, 140, 30);
+        harga.setBounds(570, 220, 150, 30);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel6.setText("Total Bayar");
         jPanel1.add(jLabel6);
-        jLabel6.setBounds(480, 300, 80, 15);
+        jLabel6.setBounds(450, 320, 80, 15);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("Cash");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(480, 350, 60, 15);
+        jLabel7.setBounds(450, 380, 60, 15);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("Kembalian");
         jPanel1.add(jLabel8);
-        jLabel8.setBounds(480, 400, 70, 15);
+        jLabel8.setBounds(450, 440, 70, 15);
         jPanel1.add(totalfield);
-        totalfield.setBounds(610, 300, 110, 30);
+        totalfield.setBounds(570, 310, 150, 30);
         jPanel1.add(cash);
-        cash.setBounds(610, 340, 110, 30);
+        cash.setBounds(570, 370, 150, 30);
         jPanel1.add(kembalian);
-        kembalian.setBounds(610, 380, 110, 30);
+        kembalian.setBounds(570, 430, 150, 30);
 
+        jButton1.setBackground(new java.awt.Color(204, 204, 204));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setText("BAYAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -234,8 +202,10 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(680, 450, 80, 30);
+        jButton1.setBounds(690, 490, 80, 30);
 
+        jButton2.setBackground(new java.awt.Color(204, 204, 204));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton2.setText("PESAN");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,8 +213,10 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(680, 200, 80, 30);
+        jButton2.setBounds(690, 260, 80, 30);
 
+        jButton3.setBackground(new java.awt.Color(204, 204, 204));
+        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton3.setText("KEMBALI");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -252,7 +224,32 @@ public class TuBes extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(570, 450, 80, 30);
+        jButton3.setBounds(570, 490, 80, 30);
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel9.setText("TRANSAKSI");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(328, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(320, 320, 320))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addContainerGap())
+        );
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(0, 0, 790, 50);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -320,8 +317,8 @@ public class TuBes extends javax.swing.JFrame {
                 }
             }
             
-                Update();
-                loadData();
+                u.Update(jTable1);
+                l.loadData(jTable1);
                 data2 [0] = pkt;
                 data2 [1] = jpkt;
                 data2 [2] = ""+jumlah;
@@ -334,24 +331,6 @@ public class TuBes extends javax.swing.JFrame {
         }
         total += (hargaaa*jumlah);
         totalfield.setText("Rp. "+total);
-
-          //  DefaultTableModel model = (DefaultTableModel)jTable2.getModel ();
-            //model.addRow(new Object []{paket.getText(),jenispaket.getText(),kg.getText(),harga.getText()});
-//        int a = Integer.parseInt(kg.getText());
-//        int b = Integer.parseInt(harga.getText());
-//        int c = a*b;
-//
-//        DefaultTableModel tb = (DefaultTableModel)jTable2 .getModel ();
-//        Vector z = new Vector ();
-//        z.add(paket.getText());
-//        z.add(jenispaket.getText());
-//        z.add(harga.getText());
-//        z.add(kg.getText());
-//        z.add(c)
-//        tb.addRow(z);
-//    
-//        int total = (harga*kg);
-//        totalfield.setText("Rp. "+total);
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -434,6 +413,7 @@ public class TuBes extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -441,7 +421,9 @@ public class TuBes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     public javax.swing.JTable jTable1;

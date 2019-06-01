@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 public class image extends JPanel {
     Image gambar;
     public image (){
-        gambar =new ImageIcon(getClass().getResource("/Images/Images.PNG")).getImage();
+        gambar =new ImageIcon(getClass().getResource("/Images/Laundry.png")).getImage();
     }
     @Override
     protected void paintComponent (Graphics g){
