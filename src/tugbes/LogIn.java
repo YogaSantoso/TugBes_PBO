@@ -74,7 +74,7 @@ public class LogIn extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(300, 240, 65, 25);
+        jButton1.setBounds(300, 240, 80, 25);
         jPanel1.add(Pass);
         Pass.setBounds(191, 170, 140, 30);
 
@@ -173,13 +173,13 @@ public class LogIn extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField Pass;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
+    public javax.swing.JPasswordField Pass;
+    public javax.swing.JButton jButton1;
+    public static javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField2;
+    public javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }
