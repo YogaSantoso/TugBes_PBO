@@ -22,6 +22,8 @@ public class TuBes extends javax.swing.JFrame {
     int d = 0, total = 0, kembali = 0;
     loadData l = new loadData ();
     Update u = new Update ();
+    jTable1MouseClicked jt = new jTable1MouseClicked ();
+    jButton2ActionPerformed jb1 = new jButton2ActionPerformed ();
     
     public TuBes() {
         initComponents();
@@ -293,13 +295,7 @@ public class TuBes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here
-        paket.setText("");
-        paket.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
-        jenispaket.setText("");
-        jenispaket.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString());
-        harga.setText("");
-        harga.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString());
+       jt.jTable1MouseClicked(jTable1, paket, jenispaket, harga);
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void hargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hargaActionPerformed
@@ -311,53 +307,7 @@ public class TuBes extends javax.swing.JFrame {
     }//GEN-LAST:event_kgKeyTyped
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-//         TODO add your handling code here:
-         String [] data2 = new String [5];
-        String pkt = paket.getText();
-        String jpkt = jenispaket.getText();
-        String hrg = harga.getText();
-        int hargaaa = Integer.parseInt(harga.getText());
-        int jumlah = Integer.parseInt(kg.getText());
-        
-        int h = 0,  baris = 0;
-        String nama = "";
-        boolean ada = false;
-        if(pkt.equals("") || jumlah == 0 ){
-            
-        }
-        else{
-            for(int i = 0; i<model1.getRowCount();i++){
-                if(pkt.equals(model1.getValueAt(i, 0))){
-                    nama = model1.getValueAt(i, 1).toString();
-                    hrg = model1.getValueAt(i, 2).toString();
-                    
-                    
-                    
-                    
-                    baris = i;
-                    ada = true;
-                    paket.setText("");  
-                    jenispaket.setText("");
-                    kg.setText("");
-                    harga.setText("");
-                            
-                }
-            }
-            
-                u.Update(jTable1);
-                //l.loadData(jTable1);
-                data2 [0] = pkt;
-                data2 [1] = jpkt;
-                data2 [2] = ""+jumlah;
-                data2 [3] = hrg;
-                data2 [4] = ""+(hargaaa*jumlah);
-                
-                model2.addRow(data2);
-           
-           
-        }
-        total += (hargaaa*jumlah);
-        totalfield.setText("Rp. "+total);
+       jb1.jButton2ActionPerformed(jTable1, jTable2, paket, jenispaket, harga, kg, totalfield);
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
