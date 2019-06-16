@@ -23,7 +23,7 @@ public class TuBes extends javax.swing.JFrame {
     loadData l = new loadData ();
     Update u = new Update ();
     jTable1MouseClicked jt = new jTable1MouseClicked ();
-    jButton2ActionPerformed jb1 = new jButton2ActionPerformed ();
+    
     
     public TuBes() {
         initComponents();
@@ -307,8 +307,53 @@ public class TuBes extends javax.swing.JFrame {
     }//GEN-LAST:event_kgKeyTyped
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       jb1.jButton2ActionPerformed(jTable1, jTable2, paket, jenispaket, harga, kg, totalfield);
-        
+
+        String [] data2 = new String [5];
+        String pkt = paket.getText();
+        String jpkt = jenispaket.getText();
+        String hrg = harga.getText();
+        int hargaaa = Integer.parseInt(harga.getText());
+        int jumlah = Integer.parseInt(kg.getText());
+        int h = 0,  baris = 0;
+        String nama = "";
+        boolean ada = false;
+        if(pkt.equals("") || jumlah == 0 ){
+            
+        }
+        else{
+            for(int i = 0; i<model1.getRowCount();i++){
+                if(pkt.equals(model1.getValueAt(i, 0))){
+                    nama = model1.getValueAt(i, 1).toString();
+                    hrg = model1.getValueAt(i, 2).toString();
+                    
+                    
+                    
+                    
+                    baris = i;
+                    ada = true;
+                    paket.setText("");
+                    jenispaket.setText("");
+                    kg.setText("");
+                    harga.setText("");
+                    
+                }
+            }
+            
+            u.Update(jTable1);
+            //l.loadData(jTable1);
+            data2 [0] = pkt;
+            data2 [1] = jpkt;
+            data2 [2] = ""+jumlah;
+            data2 [3] = hrg;
+            data2 [4] = ""+(hargaaa*jumlah);
+            
+            model2.addRow(data2);
+            
+            
+        }
+        total += (hargaaa*jumlah);
+        totalfield.setText("Rp. "+total);
+    
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jenispaketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jenispaketActionPerformed
@@ -317,7 +362,7 @@ public class TuBes extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-          if(cash.getText().isEmpty()){
+           if(cash.getText().isEmpty()){
             
             
         }
@@ -368,7 +413,7 @@ public class TuBes extends javax.swing.JFrame {
             int SelectedRowIndex = jTable2.getSelectedRow();
             model.removeRow(SelectedRowIndex);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null,"Apakah yakin ingin menghapus?","Perhatian",HEIGHT);
         }
         totalfield.setText("");
         cash.setText("");

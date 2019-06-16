@@ -1,8 +1,12 @@
 package tugbes;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +17,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class tmbhpaket extends javax.swing.JFrame {
     String[] data;
+    String path;
+    File file;
+    BufferedReader br;
+    BufferedWriter bw;
     DefaultTableModel model;
     DefaultTableModel model1;
     loadData l = new loadData ();
@@ -22,6 +30,39 @@ public class tmbhpaket extends javax.swing.JFrame {
         model1 = (DefaultTableModel)jTable1.getModel();
         l.loadData(jTable1);
         data = new String[4];
+    }
+    
+    public void Update(){
+        path = "src/Tugbes/Laundry.txt";
+        file = new File(path);
+        try {
+            bw = new BufferedWriter(new FileWriter(file));
+            for(int i=0;i<jTable1.getRowCount();i++){
+                for(int j=0;j<jTable1.getColumnCount();j++){
+                    if(j>0)
+                        bw.write("/");
+                    bw.write(jTable1.getValueAt(i, j).toString());
+                }
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
+        }
+    }
+    public final void loadData(){
+        model1.getDataVector().removeAllElements();
+        String path = "src/Tugbes/Laundry.txt";
+        File file = new  File(path);
+        try {
+            br = new BufferedReader(new FileReader(file));
+            Object[] dataBaris = br.lines().toArray();
+            for (Object dataBari : dataBaris) {
+                String baris = dataBari.toString();
+                String[] data = baris.split("/");
+                model1.addRow(data);
+            }
+        } catch (FileNotFoundException e) {
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -41,9 +82,8 @@ public class tmbhpaket extends javax.swing.JFrame {
         harga = new javax.swing.JTextField();
         kg = new javax.swing.JTextField();
         tambah = new javax.swing.JButton();
-        hapus = new javax.swing.JButton();
-        edit = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        hapus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,29 +131,17 @@ public class tmbhpaket extends javax.swing.JFrame {
             }
         });
 
-        hapus.setText("Hapus");
-        hapus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                hapusMouseClicked(evt);
-            }
-        });
-        hapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hapusActionPerformed(evt);
-            }
-        });
-
-        edit.setText("Edit");
-        edit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editActionPerformed(evt);
-            }
-        });
-
         jButton4.setText("Kembali");
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton4MouseClicked(evt);
+            }
+        });
+
+        hapus.setText("Hapus");
+        hapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hapusActionPerformed(evt);
             }
         });
 
@@ -132,22 +160,19 @@ public class tmbhpaket extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tambah)
-                        .addGap(18, 18, 18)
+                        .addGap(30, 30, 30)
                         .addComponent(hapus))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(paket, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
                         .addComponent(jenispaket)
                         .addComponent(harga)
                         .addComponent(kg)))
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(edit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton4)
                         .addGap(21, 21, 21))))
         );
@@ -173,9 +198,8 @@ public class tmbhpaket extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tambah)
-                    .addComponent(hapus)
-                    .addComponent(edit)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(hapus))
                 .addGap(38, 38, 38))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(105, Short.MAX_VALUE)
@@ -203,50 +227,28 @@ public class tmbhpaket extends javax.swing.JFrame {
 
     private void tambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahActionPerformed
         // TODO add your handling code here:
-        data[0] = paket.getText();
-        data[1] = jenispaket.getText();
-        data[2] = harga.getText();
-        data[3] = kg.getText();
-        model.addRow(data);
-        paket.setText("");
-        jenispaket.setText("");
-        harga.setText("");
-        kg.setText("");
-    }//GEN-LAST:event_tambahActionPerformed
-
-    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
-        // TODO add your handling code here:
-        int baris = jTable1.getSelectedRow();
-        data[0] = paket.getText();
-        data[1] = jenispaket.getText();
-        data[2] = harga.getText();
-        data[3] = kg.getText();
-        
-        model.setValueAt(data[0], baris, 0);
-        model.setValueAt(data[1], baris, 1);
-        model.setValueAt(data[2], baris, 2);
-        model.setValueAt(data[3], baris, 3);
-        
-        paket.setText("");
-        jenispaket.setText("");
-        harga.setText("");
-        kg.setText("");
-    }//GEN-LAST:event_editActionPerformed
-
-    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
-        // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-        try {
-            int SelectedRowIndex = jTable1.getSelectedRow();
-            model.removeRow(SelectedRowIndex);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+        if(paket.getText().equals("") ||
+                jenispaket.getText().equals("") ||
+                harga.getText().equals("")||
+                kg.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"Data Kurang","Perhatian",HEIGHT);
         }
-        paket.setText("");
-        jenispaket.setText("");
-        harga.setText("");
-        kg.setText("");
-    }//GEN-LAST:event_hapusActionPerformed
+        else{
+            data[0] = paket.getText();
+            data[1] = jenispaket.getText();
+            data[2] = harga.getText();
+            data[3] = kg.getText();
+            
+            model1.addRow(data);
+            
+            /*kodeField.setText("");
+            namaField.setText("");
+            hargaField.setText("");
+            jumlahField.setText("");*/
+            Update();
+            loadData();
+        }
+    }//GEN-LAST:event_tambahActionPerformed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
         // TODO add your handling code here
@@ -260,20 +262,25 @@ public class tmbhpaket extends javax.swing.JFrame {
 
     private void tambahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tambahMouseClicked
         // TODO add your handling code here:
-        int baris = jTable1.getSelectedRow();
-        paket.setText(jTable1.getValueAt(baris, 0).toString());
-        jenispaket.setText(jTable1.getValueAt(baris, 1).toString());
-        harga.setText(jTable1.getValueAt(baris, 2).toString());
-        kg.setText(jTable1.getValueAt(baris, 3).toString());
+        
     }//GEN-LAST:event_tambahMouseClicked
 
-    private void hapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hapusMouseClicked
+    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
         // TODO add your handling code here:
-        paket.setText("");
-        jenispaket.setText("");
-        harga.setText("");
-        kg.setText("");
-    }//GEN-LAST:event_hapusMouseClicked
+        if(jTable1.getSelectedRow() == -1){
+            JOptionPane.showMessageDialog(null, "Harap Pilih Baris!", "Perhatian", HEIGHT);
+        }
+        else{
+            int line = jTable1.getSelectedRow();
+            
+            paket.setText("");
+            
+        
+            model1.removeRow(line);
+            Update();
+            loadData();
+        }
+    }//GEN-LAST:event_hapusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -314,7 +321,6 @@ public class tmbhpaket extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton edit;
     private javax.swing.JButton hapus;
     private javax.swing.JTextField harga;
     private javax.swing.JButton jButton4;
